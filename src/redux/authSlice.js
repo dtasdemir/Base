@@ -27,6 +27,8 @@ export const Logout = createAsyncThunk('auth/logout', async () => {
   await auth().signOut();
 
   AsyncStorage.removeItem('Base::user');
+
+  navigate({NavigatorName: 'login'})
 });
 
 export const authSlice = createSlice({
