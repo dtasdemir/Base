@@ -21,10 +21,11 @@ export default function AprInput({
     value,
     onChangeText,
     color,
-    inputStyle
+    inputStyle,
+    viewStyle
 }) {
   return (
-    <View style={[m.col, m.f(1)]}>
+    <View style={[m.col, viewStyle]}>
       {InputText ? (
         <Text style={[m.mb(4), m.fontSCW(14, color ? color : defaultInput === true ? m.primaryTransparent2  : m.primaryColor, '500'), inputTextStyle]}>
           {InputText}

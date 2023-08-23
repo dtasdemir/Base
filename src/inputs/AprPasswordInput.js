@@ -4,8 +4,7 @@ import {View, TextInput, Text} from 'react-native';
 import {Icon} from '@rneui/themed';
 
 // Custom Css Style
-import m from '../../style/MStyle';
-import {moderateScale} from '../../style/Metrics';
+import m from '../style/index';
 
 export default function AprPasswordInput({
   color,
@@ -51,7 +50,7 @@ export default function AprPasswordInput({
         name={ShowPassword ? 'eye-off' : 'eye'}
         color={color ? color : m.primaryColor}
         type="material-community"
-        size={moderateScale(18)}
+        size={18}
       />
     </View>
     </View>
