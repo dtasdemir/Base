@@ -1,47 +1,101 @@
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {PermissionsAndroid, StyleSheet, ToastAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import MapView from 'react-native-maps';
+import MapView, {Heatmap, PROVIDER_GOOGLE} from 'react-native-maps';
+import {useSelector} from 'react-redux';
 
 export default function Home() {
-  const [Location, setLocation] = useState(null);
+  const [LocationPermission, setLocationPermission] = useState(false);
 
-  const fetchLocation = () => {
-    Geolocation.getCurrentPosition(
-      position => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        setLocation({latitude, longitude});
+  const [LData, setLData] = useState();
 
-        console.log(latitude, longitude);
+  const uId = useSelector(state => state.auth.userData.uid);
+
+  useEffect(() => {
+    checkLocationPermission();
+    console.log(uId, 'UID');
+    getLocation();
+  }, []);
+
+  const checkLocationPermission = async () => {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: 'Uygulama Konum İzni',
+        message: 'Konumunuza erişmek için izin vermeniz gerekiyor.',
+        buttonNeutral: 'Daha Sonra Sor',
+        buttonNegative: 'İptal',
+        buttonPositive: 'Tamam',
       },
-      error => {
-        console.log('object', error);
-      },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
+
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      ToastAndroid.show('Konum izni verildi.', ToastAndroid.SHORT);
+      setLocationPermission(true);
+    } else {
+      ToastAndroid.show('Konum izni verilmedi.', ToastAndroid.SHORT);
+      setLocationPermission(false);
+    }
   };
 
   useEffect(() => {
-    fetchLocation();
-  }, []);
+    if (LocationPermission) {
+      const pushLocation = setInterval(getLocation, 100000);
 
-  /**
-   * 
-      <Text onPress={fetchLocation}>Home</Text>
-      <Text onPress={() => console.log(Location)}>Locatiom</Text>
-   */
+      return () => clearInterval(pushLocation);
+    }
+  }, [LocationPermission]);
+
+  const getLocation = async () => {
+    try {
+      Geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const long = position.coords.longitude;
+
+        const userLocation = firebase.database().ref(`userLocations/${uId}`);
+
+        userLocation.push({
+          lat,
+          long,
+          timeStamp: firebase.database.ServerValue.TIMESTAMP,
+        });
+
+        setLData({
+          latitude: lat,
+          longitude: long,
+          weight: 1,
+        });
+
+        console.log(LData);
+      });
+    } catch (e) {
+      console.log('Konum gönderilemedi.', e);
+    }
+  };
+
   return (
-    <View style={{flex: 1}}>
+    <>
       <MapView
-        style={{width: '100%', height: '100%'}}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: 37.738802112686734,
+          longitude: 29.09251192381259,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-      />
-    </View>
+        provider={PROVIDER_GOOGLE}
+        style={styles.map}
+        apiKey="AIzaSyAWuHCVXpDpYWE8nQNgvJQsQQjTdweUehA">
+        <Heatmap points={LData} />
+      </MapView>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  map: {
+    ...StyleSheet.absoluteFillObject,
+    flex: 1,
+  },
+});
