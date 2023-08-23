@@ -15,7 +15,10 @@ export default function TabNavigator() {
     return (
         <Tab.Navigator screenOptions={{
             headerShown: false,
-            tabBarStyle: [m.h(70), m.pb(8)]
+            tabBarStyle: [m.h(70), m.pb(8)],
+            tabBarActiveTintColor: m.primaryColor,
+            tabBarInactiveTintColor: m.darkGray
+            
         }}>
             <Tab.Screen name="home" options={{
                tabBarIcon: ({color}) => (
