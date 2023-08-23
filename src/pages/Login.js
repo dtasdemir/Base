@@ -26,7 +26,7 @@ export default function Login() {
     <View style={[m.f(1), m.ph(16), m.hcenter]}>
       <Text style={[m.pb(36), m.tcenter, m.fontSCW(28, m.primaryColor, '600')]}>Giriş Yap</Text>
       <AprInput InputText={'E-posta'} value={DataU.email} onChangeText={text => updateDataU('email', text)} />
-      <AprPasswordInput InputText={'Şifre'} value={DataU.password}  />
+      <AprPasswordInput InputText={'Şifre'} value={DataU.password} onChangeText={text => updateDataU('password', text)}  />
       <Button
         title={"Giriş Yap"}
         color={m.primaryColor}

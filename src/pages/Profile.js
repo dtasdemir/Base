@@ -29,7 +29,7 @@ export default function Profile() {
       </View>
       <View style={[m.f(1), m.pv(12), m.ph(16)]}>
 
-        <AprInput InputText={'E-posta'} value={UData.email} />
+        <AprInput InputText={'E-posta'} value={UData.email} viewStyle={[m.f(1)]}/>
         <Button
           title={'Çıkış Yap'}
           color={m.primaryColor}
