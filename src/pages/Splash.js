@@ -10,18 +10,11 @@ export default function Splash({navigation}) {
   
   useEffect(() => {
     AsyncStorage.getItem('Base::user').then(p => {
-      console.log(JSON.parse(p), "Hello Balım");
-      console.log(p);
-
-      
-
       if(p) {
-        dispatch(LoginUser({email:'derya@aprilerp.com', password: '123456'}))
-       navigation.navigate('tab');
+        dispatch(LoginUser(JSON.parse(p)))
       } else {
         navigation.navigate('login');
       }
-
     }).catch(e => {
       console.log(e)
     })
@@ -29,7 +22,7 @@ export default function Splash({navigation}) {
   },[])
   return (
     <View>
-      <Text>Splash</Text>
+      <Text>Splash Screen</Text>
     </View>
   );
 }

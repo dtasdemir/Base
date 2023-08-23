@@ -22,7 +22,6 @@ export default function Login() {
       <Text onPress={() => {
         dispatch(LoginUser({email:'derya@aprilerp.com', password: '123456'}))
       }}>Login</Text>
-      <Text onPress={() => console.log(uData.uid)}>Data</Text>
       <Text onPress={() => dispatch(Logout())}>Çıkış Yap</Text>
     </View>
   );
